@@ -53,7 +53,10 @@ eclipse {
     }
 }
  
-dependencies { // https://docs.gradle.org/current/userguide/declaring_dependencies.html
+dependencies {
+    implementation 'junit:junit:4.12'
+	implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+// https://docs.gradle.org/current/userguide/declaring_dependencies.html
 
 	//https://junit.org/junit5/docs/current/user-guide/index.html#dependency-metadata
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"    

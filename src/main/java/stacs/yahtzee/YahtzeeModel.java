@@ -1,6 +1,7 @@
 package stacs.yahtzee;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -37,7 +38,7 @@ public interface YahtzeeModel {
    * @param pn
    * ? Have combination enumerators?
    */
-   //ArrayList<combination> validComb(int pn);
+   HashMap<String, Integer> validComb(int pn);
 
     /**
      * Can only be used at the end of each players turn and once per turn.

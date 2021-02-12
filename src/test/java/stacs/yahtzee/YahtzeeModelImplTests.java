@@ -1,18 +1,41 @@
 package stacs.yahtzee;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 
  */
 public class YahtzeeModelImplTests {
-  
+
+
+  private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+  private final ByteArrayOutputStream err = new ByteArrayOutputStream();
+  private final PrintStream originalOut = System.out;
+  private final PrintStream originalErr = System.err;
+
+
   // add variables for the things you set up in setup()
+
+
+  @Before
+  public void setStreams() {
+    System.setOut(new PrintStream(out));
+    System.setErr(new PrintStream(err));
+  }
+
+  @After
+  public void restoreInitialStreams() {
+    System.setOut(originalOut);
+    System.setErr(originalErr);
+  }
 
   @BeforeEach
   void setup() {
@@ -23,27 +46,24 @@ public class YahtzeeModelImplTests {
   void testPlayerSetUp() {
     YahtzeeModelImpl model = new YahtzeeModelImpl(2);
     assertEquals(2,model.playerNo);
-    assertEquals(new int[]{0, 0, 0, 0, 0, 0}, model.diceSet);
+    assertArrayEquals(new int[]{0, 0, 0, 0, 0, 0}, model.diceSet);
     assertEquals(13, model.scoreCard.length);
     assertEquals(2, model.scoreCard[0].length);
   }
 
   @Test
   void testVoidSetUp() {
-    Exception exception = assertThrows(Exception.class, () -> {
-      YahtzeeModelImpl model = new YahtzeeModelImpl(1);
-    });
-    String expectedMessage = "Must be at least 2 players.";
-    String actualMessage = exception.getMessage();
-    assertEquals(actualMessage,expectedMessage);
+    YahtzeeModelImpl model = new YahtzeeModelImpl(1);
+    assertEquals(0,model.playerNo);
+    assertNull(model.scoreCard);
+    assertNull(model.diceSet);
   }
 
   @Test
   void rollDice(){
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    assertEquals(new int[]{0, 0, 0, 0, 0, 0}, model.diceSet);
     model.rollDice(new int[]{1, 1, 1, 1, 1, 1}, 0);
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 6; i++) {
       assertTrue(model.diceSet[i] != 0);
     }
   }
@@ -51,9 +71,9 @@ public class YahtzeeModelImplTests {
   @Test
   void rollVoidDice(){
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    Exception exception = assertThrows(Exception.class, () -> {
-      model.rollDice(new int[]{1, 1, 1, 1, 1, 1}, 4);
-    });
+    int[] oldDice = new int[]{0, 0, 0, 0, 0, 0};
+    model.rollDice(new int[]{1, 1, 1, 1, 1, 1}, 4);
+    assertArrayEquals(oldDice,model.diceSet);
   }
 
   @Test
