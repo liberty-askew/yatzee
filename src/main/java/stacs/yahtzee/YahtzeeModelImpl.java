@@ -6,35 +6,40 @@ import java.util.HashMap;
  *
  */
 public class YahtzeeModelImpl implements YahtzeeModel {
-    int playerNo; //number of players
+    int noPlayers; //number of players
     int[] diceSet;
-    int[][] scoreCard;
+    Scores scores;
 
     public static void main(String[] args) {
         YahtzeeModel model = new YahtzeeModelImpl(2);
         model.rollDice(new int[]{0,1,1,1,1,1} ,2) ;
+
     }
     public YahtzeeModelImpl(int np) {
         try {
             if (np < 2) {
                 throw new Exception();
             }
-            this.playerNo = np;
+            this.noPlayers = np;
             this.diceSet = new int[]{0, 0, 0, 0, 0, 0};
-            this.scoreCard = new int[13][np];
+            this.scores = new Scores(np , this);
         }
         catch (Exception e){
             System.out.println("Must be at least 2 players.");
-            System.out.println(playerNo);
-            System.out.println(diceSet);
-            System.out.println(scoreCard);
         }
     }
 
-
-
     @Override
     public void newGame() {
+        for (int i = 0; i < 13; i++) {
+            for (int j = 0; j < this.noPlayers; j++) {
+                takeTurn(j,i);
+            }
+        }
+    }
+
+    @Override
+    public void takeTurn(int playerNo, int round) {
 
     }
 

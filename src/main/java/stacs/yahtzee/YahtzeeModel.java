@@ -1,6 +1,5 @@
 package stacs.yahtzee;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,6 +18,7 @@ public interface YahtzeeModel {
    */
   void newGame();
 
+  void takeTurn(int playerNo, int round);
   /**
    * Updates the game's set of dice.
    * @param reRoll - index of die to be re-rolled. Len=5, reRoll[i]={0,1}, when rollNo = 0 reRoll = [1,1,1,1,1]

@@ -65,6 +65,8 @@ dependencies {
 	testImplementation "org.junit.platform:junit-platform-runner:${junit_platform_version}"
 	testImplementation "org.junit.platform:junit-platform-suite-api:${junit_platform_version}"
 	testImplementation "org.junit.platform:junit-platform-engine:${junit_platform_version}"
+
+	testImplementation "org.mockito:mockito-core:2.+"
 }
 
 test { // https://docs.gradle.org/5.2.1/userguide/java_testing.html#using_junit5 
@@ -94,6 +96,22 @@ checkstyle {
 
 pmd {
     ignoreFailures = true
+}
+
+jar {
+	manifest {
+		attributes('Main-Class': 'stacs.arcade.Main')
+	}
+}
+
+/**
+ * Running this task is going to be somewhat faster than running from a fully assembled .jar file.
+ * TODO: running from within Gradle does not work because Gradle provides an empty standard input,
+ * which makes the server shut down immediately
+ */
+task runGrizzly(type: JavaExec) { // https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'stacs.arcade.Main'
 }
 
 // ensure that Javadoc does not fail our build
