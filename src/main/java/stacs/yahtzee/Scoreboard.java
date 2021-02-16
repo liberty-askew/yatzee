@@ -2,12 +2,12 @@ package stacs.yahtzee;
 
 import java.util.Arrays;
 
-public class Scores{
+public class Scoreboard {
 
     public int[][] scoreCard;
     int np;
 
-    public Scores(int np){
+    public Scoreboard(int np){
         this.np = np;
         this.scoreCard = new int[13][np];
         for (int[] type: scoreCard) {

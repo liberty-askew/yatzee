@@ -6,7 +6,7 @@ package stacs.yahtzee;
 public class YahtzeeModelImpl implements YahtzeeModel {
 
     public int noPlayers; //number of players
-    public Scores scores;
+    public Scoreboard scoreboard;
     public Dice dice;
     public int rollNo;
     public int playerTurn;
@@ -19,7 +19,7 @@ public class YahtzeeModelImpl implements YahtzeeModel {
             }
             this.noPlayers = np;
             this.dice = new Dice();
-            this.scores = new Scores(np);
+            this.scoreboard = new Scoreboard(np);
             initRound();
         }
         catch (Exception e){
@@ -72,11 +72,11 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     public void choseComb(int cat) {
         Integer result = dice.selectScore(cat);
         try {
-            if (scores.getPlayerScore(playerTurn)[cat] != -1 ) {
+            if (scoreboard.getPlayerScore(playerTurn)[cat] != -1 ) {
                 throw new IndexOutOfBoundsException();
             }
             else{
-                scores.updateScorecard(result, cat, playerTurn);
+                scoreboard.updateScorecard(result, cat, playerTurn);
                 endTurn();
             }
         }
@@ -88,7 +88,7 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     @Override
     public void printCombinations(){
         for (int i = 0; i <= 12 ; i++) {
-            if(scores.getPlayerScore(playerTurn)[i] == -1){
+            if(scoreboard.getPlayerScore(playerTurn)[i] == -1){
                 System.out.println(i+". "+dice.comboTypes.get(i)+dice.possibleScores[i]);
             }
         }
@@ -96,7 +96,7 @@ public class YahtzeeModelImpl implements YahtzeeModel {
 
     @Override
     public void printScores() {
-        int[] result = scores.sumScores();
+        int[] result = scoreboard.sumScores();
         System.out.println("Scores");
         for (int i = 0; i < noPlayers; i++) {
             System.out.println("Player" + (i + 1) + " : " + result[i]);
@@ -123,7 +123,7 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     public void endGame(){
         System.out.println("GAME OVER");
         printScores();
-        System.out.println("Winner: Player"+scores.getWinner()[0]+" Score:"+scores.getWinner()[1]);
+        System.out.println("Winner: Player"+ scoreboard.getWinner()[0]+" Score:"+ scoreboard.getWinner()[1]);
         dice = null;
         rollNo = 0;
         playerTurn = 0;

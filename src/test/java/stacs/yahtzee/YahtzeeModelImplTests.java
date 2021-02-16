@@ -6,9 +6,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * 
- */
+
 public class YahtzeeModelImplTests {
 
 
@@ -19,7 +17,7 @@ public class YahtzeeModelImplTests {
     for (int i: model.dice.getDiceSet()) {
       assertNotEquals(0,i);
     }
-    int[][] card = model.scores.getScorecard();
+    int[][] card = model.scoreboard.getScorecard();
     assertEquals(13, card.length);
     assertEquals(2, card[0].length);
     assertEquals(1,model.roundNo);
@@ -32,7 +30,7 @@ public class YahtzeeModelImplTests {
     YahtzeeModelImpl model = new YahtzeeModelImpl(1);
     assertEquals(0,model.noPlayers);
     assertNull(model.dice);
-    assertNull(model.scores);
+    assertNull(model.scoreboard);
     assertEquals(0,model.rollNo);
     assertEquals(0,model.playerTurn);
     assertEquals(0,model.roundNo);
@@ -112,7 +110,7 @@ public class YahtzeeModelImplTests {
     model.dice.setDiceSet(new int[] {1,1,1,2,4});
     model.dice.calculateCombs();
     model.choseComb(0);
-    int[] result = model.scores.sumScores();
+    int[] result = model.scoreboard.sumScores();
     assertEquals(3,result[0]);
   }
 
@@ -120,10 +118,10 @@ public class YahtzeeModelImplTests {
   void selectCatInvalid(){
     YahtzeeModelImpl model = new YahtzeeModelImpl(2);
     model.choseComb(0);
-    int[] oldScore = model.scores.getPlayerScore(1);
+    int[] oldScore = model.scoreboard.getPlayerScore(1);
     model.choseComb(2);
     model.choseComb(0);
-    assertTrue(Arrays.equals(model.scores.getPlayerScore(1),oldScore));
+    assertTrue(Arrays.equals(model.scoreboard.getPlayerScore(1),oldScore));
   }
 
   @Test
@@ -155,7 +153,7 @@ public class YahtzeeModelImplTests {
     assertEquals(0,model.rollNo);
     assertEquals(0,model.playerTurn);
     assertEquals(0,model.roundNo);
-    assertTrue(model.scores.getWinner()[0] <5 && model.scores.getWinner()[0] > 0 );
+    assertTrue(model.scoreboard.getWinner()[0] <5 && model.scoreboard.getWinner()[0] > 0 );
   }
 
 
@@ -185,9 +183,9 @@ public class YahtzeeModelImplTests {
     model.choseComb(12);
     model.dice.setDiceSet(presetDice[1]); //P2
     model.choseComb(12);
-    assertTrue(model.scores.getWinner()[0]==2);
-    assertTrue(model.scores.sumScores()[0]==205);
-    assertTrue(model.scores.sumScores()[1]==275);
+    assertEquals(2,model.scoreboard.getWinner()[0]);
+    assertEquals(205,model.scoreboard.sumScores()[0]);
+    assertEquals(275,model.scoreboard.sumScores()[1]);
   }
 
 

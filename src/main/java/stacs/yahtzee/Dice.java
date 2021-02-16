@@ -11,6 +11,7 @@ public class Dice {
 
     /***
      * KEY
+     * Index of possibleScores - Combination Type e.g possibleScores[1] = score for 2s combination.
      * 0 - 1s
      * 1 - 2s
      * 2 - 3s
@@ -27,10 +28,14 @@ public class Dice {
      * 12 - Chance
      */
 
-
+    /**
+     * Handles the game's dice and calculates scoring combinations.
+     */
     public Dice(){
+
         this.diceSet = new int[5];
-        comboTypes = new Hashtable<>();
+
+        comboTypes = new Hashtable<>();  //used for storing and printing combination names.
         comboTypes.put(0,"Ones: ");
         comboTypes.put(1,"Twos: ");
         comboTypes.put(2,"Threes: ");
@@ -44,22 +49,25 @@ public class Dice {
         comboTypes.put(10,"Small straight: ");
         comboTypes.put(11,"Large straight: ");
         comboTypes.put(12,"Chance: ");
-        System.out.println(comboTypes.size());
-        roll(new int[]{1,1,1,1,1});
+
+        roll(new int[]{1,1,1,1,1}); //rolls all 5 dice at start.
     }
+
 
     public int[] getDiceSet() {
         return this.diceSet;
     }
 
+
     public void setDiceSet(int[] newDiceSet) {
+
         try{
             for (int d: newDiceSet) {
-                if(d < 1 || d > 6){
+                if(d < 1 || d > 6){ //throws exception if dice values not {1-6}
                     throw new IllegalArgumentException();
                 }
             }
-            if(newDiceSet.length != 5){
+            if(newDiceSet.length != 5){ //throws exception if try to throw more than 5 dice.
                 throw new IllegalArgumentException();
             }
             else{
@@ -73,7 +81,13 @@ public class Dice {
         }
     }
 
+    /**
+     * Rolls dice randomly and updates diceSet.
+     * @param reRoll -  index of die to be re-rolled. Len=5, reRoll[i]={0,1} e.g reRoll = [1,1,1,1,1]
+     *                  reRolls all 6 dice. reRoll = [1,0,0,0,0] only rerolls first die.
+     */
     public void roll(int[] reRoll) {
+
         int[] newRoll = new int[5];
         for (int i = 0; i < 5; i++) {
             if (reRoll[i] == 1) {
@@ -84,42 +98,49 @@ public class Dice {
             }
         }
         setDiceSet(newRoll);
-        System.out.print("Dice: [ ");
+        System.out.print("Dice: [ "); //printout for user
         for (int d : diceSet) {
             System.out.print(d + " ");
         }
         System.out.print("]");
     }
 
-    public int selectScore(int i){ //return null if val does not exist. Else returns score.
-        return possibleScores[i];
+    /**
+     * Gets the score for a category of combination based on the dice values.
+     * @param cat - category of combination user wants to select.
+     * @return - score for category based on dice.
+     */
+    public int selectScore(int cat){
+
+        return possibleScores[cat];
     }
 
+    /**
+     * Calculates the possible score for each combination {0-12} and updates possibleScore.
+     * Independent of whether player has already used this combination.
+     */
     public void calculateCombs(){
-        System.out.println("START OF CALC COMBS");
-        for (int i: diceSet) {
-            System.out.print(i+" :");
-        }
+
         possibleScores = new int[13];
         for (int i = 0; i <= 12; i++) {
-                if (i <6){
+                if (i <6){ // Ones, Twos....Sixes
                     howManyIs(i);
                     continue;
                 }
-                if(i < 9){
+                if(i < 9){ //3 or 4 of a Kind and Yahtzee
                     iOfAKind(i);
                     continue;
                 }
-                if(i == 9){ //full house
+                if(i == 9){
                     fullHouse();
                 }
-                if(i == 10){ //small run
+                if(i == 10){
                     smallStraight();
                 }
                 if(i == 11){
                     largeStraight();
                 }
-                if (i == 12){
+                if (i == 12){ //Chance
                     possibleScores[i] = Arrays.stream(diceSet).sum();
                     continue;
                 }
@@ -127,6 +148,7 @@ public class Dice {
     }
 
     private void howManyIs(int i){
+
         int total = 0;
         for (int j: diceSet) {
             if(j == (i+1)){
@@ -137,6 +159,7 @@ public class Dice {
     }
 
     private void iOfAKind(int i){
+
         for (int j = 0; j < 6; j++) {
             if (possibleScores[j]>= (i - 3) * (j+1)) {
                 possibleScores[i] = Arrays.stream(diceSet).sum();
@@ -148,20 +171,22 @@ public class Dice {
     }
 
     private void fullHouse(){
-            if (possibleScores[6] != 0) {
-                for (int j = 0; j < 6; j++) {
-                        if (possibleScores[j] == 2 * j) {
-                            possibleScores[9] = 25;
-                            return;
-                        }
 
-                }
+        if (possibleScores[6] != 0) {
+            for (int j = 0; j < 6; j++) {
+                    if (possibleScores[j] == 2 * j) {
+                        possibleScores[9] = 25;
+                        return;
+                    }
+
             }
+        }
         possibleScores[9]  = 0;
         return;
     }
 
     private void smallStraight(){
+
         for (int j = 0; j < 3; j++) {
             boolean valid = true;
             for (int k = 0; k < 3; k++) {
@@ -179,14 +204,14 @@ public class Dice {
     }
 
     private void largeStraight() {
-            if (possibleScores[10]==30) {
-                if (possibleScores[0]==1 && possibleScores[4] ==5 ||
-                        (possibleScores[1] ==2 && possibleScores[5] == 6)){
-                    possibleScores[11] = 40;
-                    return;
-                }
-            }
 
+        if (possibleScores[10]==30) {
+            if (possibleScores[0]==1 && possibleScores[4] ==5 ||
+                    (possibleScores[1] ==2 && possibleScores[5] == 6)){
+                possibleScores[11] = 40;
+                return;
+            }
+        }
         possibleScores[11] = 0;
         return;
     }
