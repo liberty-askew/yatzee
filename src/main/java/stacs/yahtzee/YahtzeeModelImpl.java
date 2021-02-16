@@ -27,7 +27,7 @@ public class YahtzeeModelImpl implements YahtzeeModel {
         }
     }
 
-    private void initRound() {
+    public void initRound() {
         roundNo += 1;
         this.playerTurn = 0;
         initTurn();
@@ -44,16 +44,26 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     public int[] rollDice(int[] reRoll) {
         this.rollNo += 1;
         try {
-            if (rollNo > 3) {
+            if (rollNo > 3 ) {
+                throw new IndexOutOfBoundsException();
+            }
+            if(reRoll.length!= 5){
                 throw new IllegalArgumentException();
             }
-            else{
-                dice.roll(reRoll);
+            for (int i: reRoll) {
+                if(i!=0 && i!=1){
+                    throw new IllegalArgumentException();
+                }
             }
+            dice.roll(reRoll);
+            printCombinations();
             return dice.getDiceSet();
         }
-        catch (Exception e){ //might not be needed?
+        catch (IndexOutOfBoundsException e){ //might not be needed?
             System.out.println("No more than 3 rolls of dice each go.");
+        }
+        catch (IllegalArgumentException e){ //might not be needed?
+            System.out.println("Invalid roll input");
         }
         return null;
     }
@@ -114,6 +124,10 @@ public class YahtzeeModelImpl implements YahtzeeModel {
         System.out.println("GAME OVER");
         printScores();
         System.out.println("Winner: Player"+scores.getWinner()[0]+" Score:"+scores.getWinner()[1]);
+        dice = null;
+        rollNo = 0;
+        playerTurn = 0;
+        roundNo = 0;
     }
 
 

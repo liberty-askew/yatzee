@@ -48,14 +48,61 @@ public class YahtzeeModelImplTests {
     }
   }
 
+  @Test
+  void rollInvalidDice(){
+    YahtzeeModelImpl model = new YahtzeeModelImpl(3);
+    int[] oldDice = model.dice.getDiceSet();
+    model.rollDice(new int[]{0, 1, 0, 1});
+    assertArrayEquals(oldDice,model.dice.getDiceSet());
+    model.rollDice(new int[]{0, 1, 0, 1, 1, 1});
+    assertArrayEquals(oldDice,model.dice.getDiceSet());
+    model.rollDice(new int[]{0, 1, 0, 1, 3});
+    assertArrayEquals(oldDice,model.dice.getDiceSet());
+  }
 
   @Test
-  void rollVoidDice(){
+  void initRoundTest() {
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    model.rollDice(new int[]{1, 1, 1, 1, 1, 1});
-    model.rollDice(new int[]{1, 1, 1, 1, 1, 1});
+    model.initRound();
+    assertEquals(2,model.roundNo);
+    assertEquals(1,model.playerTurn);
+    assertEquals(1,model.rollNo);
+  }
+
+  @Test
+  void initTurnTest() {
+    YahtzeeModelImpl model = new YahtzeeModelImpl(3);
+    model.initTurn();
+    assertEquals(2,model.playerTurn);
+    assertEquals(1,model.rollNo);
+  }
+
+  @Test
+  void endRoundTest() {
+    YahtzeeModelImpl model = new YahtzeeModelImpl(3);
+    model.endRound();
+    assertEquals(2,model.roundNo);
+    assertEquals(1,model.playerTurn);
+    assertEquals(1,model.rollNo);
+  }
+
+  @Test
+  void endTurnTest() {
+    YahtzeeModelImpl model = new YahtzeeModelImpl(3);
+    model.endTurn();
+    assertEquals(1,model.roundNo);
+    assertEquals(2,model.playerTurn);
+    assertEquals(1,model.rollNo);
+  }
+
+
+  @Test
+  void fourthDiceRoll(){
+    YahtzeeModelImpl model = new YahtzeeModelImpl(3);
+    model.rollDice(new int[]{1, 1, 1, 1, 1});
+    model.rollDice(new int[]{1, 1, 1, 1, 1});
     int[] oldDice = model.dice.getDiceSet();
-    model.rollDice(new int[]{1, 1, 1, 1, 1, 1});
+    model.rollDice(new int[]{1, 1, 1, 1, 1});
     assertEquals(oldDice , model.dice.getDiceSet());
   }
 
@@ -79,16 +126,36 @@ public class YahtzeeModelImplTests {
     assertTrue(Arrays.equals(model.scores.getPlayerScore(1),oldScore));
   }
 
+  @Test
+  void roundofGame(){
+    YahtzeeModelImpl model = new YahtzeeModelImpl(2);
+    model.rollDice(new int[]{1,1,1,1,1}); //P1 R1
+    model.rollDice(new int[]{1,1,1,1,0});
+    assertEquals(3,model.rollNo);
+    model.choseComb(1);
+    assertEquals(2,model.playerTurn);
+    assertEquals(1,model.roundNo);
+    model.rollDice(new int[]{0,0,0,0,1}); //P2 R1
+    assertEquals(2,model.rollNo);
+    model.choseComb(3);
+    assertEquals(1,model.playerTurn);
+    assertEquals(2,model.roundNo);
+   }
+
 
   @Test
   void arbitraryGame(){
-    YahtzeeModelImpl model = new YahtzeeModelImpl(2);
+    YahtzeeModelImpl model = new YahtzeeModelImpl(4);
     for (int i = 0; i < 13; i++) {
-      for (int j = 0; j < 2; j++) {
+      for (int j = 0; j < 4; j++) {
         model.choseComb(i);
       }
     }
-    assertTrue(model.scores.getWinner()[0] == 1 || model.scores.getWinner()[0] == 2);
+    assertNull(model.dice);
+    assertEquals(0,model.rollNo);
+    assertEquals(0,model.playerTurn);
+    assertEquals(0,model.roundNo);
+    assertTrue(model.scores.getWinner()[0] <5 && model.scores.getWinner()[0] > 0 );
   }
 
 
