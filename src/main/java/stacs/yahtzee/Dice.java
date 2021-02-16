@@ -155,7 +155,7 @@ public class Dice {
     }
 
     private void fullHouse(){
-            if (!compare(6, 0)) {
+            if (possibleScores[6] != 0) {
                 for (int j = 0; j < 6; j++) {
                         if (possibleScores[j] == 2 * j) {
                             possibleScores[9] = 25;
@@ -171,7 +171,7 @@ public class Dice {
     private void smallStraight(){
         inner: for (int j = 0; j < 3; j++) { //TODO: test
             for (int k = 0; k < 3; k++) {
-                    if (!compare(j+k,j+k+1)) {
+                    if (possibleScores[j+k] != j+k+1) {
                         break inner;
                     }
 
@@ -185,8 +185,8 @@ public class Dice {
 
     private void largeStraight() {
             if (possibleScores[10]==30) {
-                if (compare(0,1) && compare(4,5) ||
-                        (compare(1,2) && compare(5,6))) {
+                if (possibleScores[0]==1 && possibleScores[4] ==5 ||
+                        (possibleScores[1] ==2 && possibleScores[5] == 6)){
                     possibleScores[11] = 40;
                     return;
                 }
@@ -197,19 +197,7 @@ public class Dice {
     }
 
 
-    private boolean compare(int possScoreLookup , int comparable){
-        Integer returnedScore = possibleScores[possScoreLookup];
-        if(returnedScore == null){
-            return false;
-        }
-        if(returnedScore == comparable){
-            return true;
-        }
-        else{
-            return false;
-        }
-
     }
 
 
-}
+
