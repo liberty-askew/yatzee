@@ -88,10 +88,8 @@ public class YahtzeeModelImplTests {
         model.choseComb(i);
       }
     }
-    assertTrue(model.scores.getWinner()[0] == 1 || model.scores.getWinner()[1] == 2);
+    assertTrue(model.scores.getWinner()[0] == 1 || model.scores.getWinner()[0] == 2);
   }
-
-
 
 
   @Test
@@ -120,34 +118,10 @@ public class YahtzeeModelImplTests {
     model.choseComb(12);
     model.dice.setDiceSet(presetDice[1]); //P2
     model.choseComb(12);
-    //model.printScores();
     assertTrue(model.scores.getWinner()[0]==2);
     assertTrue(model.scores.sumScores()[0]==205);
     assertTrue(model.scores.sumScores()[1]==275);
   }
-
-  @Test
-  void diceCardUpdate() {
-  }
-
-  @Test
-  void winnerCorrect(){
-    //hard code scores and test that the correct winner is calculated.
-  }
-
-
-  @Test
-  void scoring(){
-    //hard code dice combo and check if zero combo chosen.
-  }
-
-
-  @Test
-  void setScorecard(){
-    //make YZmodel
-    // try to update scores.
-  }
-
 
 
 }

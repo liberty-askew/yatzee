@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Scores{
 
-    private int[][] scoreCard;
+    public int[][] scoreCard;
     int np;
 
     public Scores(int np){
