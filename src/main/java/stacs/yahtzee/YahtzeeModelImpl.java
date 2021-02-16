@@ -81,11 +81,19 @@ public class YahtzeeModelImpl implements YahtzeeModel {
 
     @Override
     public void choseComb(int cat) {
-        Integer result = this.dice.selectScore(cat);
-        if (result != null && scores.getPlayerScore(playerTurn)[cat] == -1) {
-            scores.updateScorecard(result, cat, playerTurn);
+        Integer result = dice.selectScore(cat);
+        try {
+            if (result == null || scores.getPlayerScore(playerTurn)[cat] != -1 ) {
+                throw new IndexOutOfBoundsException();
+            }
+            else{
+                scores.updateScorecard(result, cat, playerTurn);
+                endTurn();
+            }
         }
-        endTurn();
+        catch (IndexOutOfBoundsException e) {
+            System.out.println("please select valid combination input.");
+        }
     }
 
     @Override

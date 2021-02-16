@@ -7,7 +7,7 @@ public class Dice {
 
     public int[] diceSet;
     public Hashtable<Integer,Integer> possibleScores;
-    public Hashtable<Integer,String> comboTypes = new Hashtable<>();
+    public Hashtable<Integer,String> comboTypes;
 
     /***
      * KEY
@@ -27,11 +27,17 @@ public class Dice {
      * 12 - Chance
      */
 
+    public static void main(String[] args) {
+        Dice testDice = new Dice();
+        int[] diceSet = testDice.getDiceSet();
+        for (int d: diceSet) {
+            System.out.println(d >0 && d<7);
+        }
+    }
 
     public Dice(){
         this.diceSet = new int[5];
-        this.possibleScores = new Hashtable<>();
-        roll(new int[]{1,1,1,1,1});
+        comboTypes = new Hashtable<>();
         comboTypes.put(0,"Ones: ");
         comboTypes.put(1,"Twos: ");
         comboTypes.put(2,"Threes: ");
@@ -45,18 +51,38 @@ public class Dice {
         comboTypes.put(10,"Small straight: ");
         comboTypes.put(11,"Large straight: ");
         comboTypes.put(12,"Chance: ");
+        System.out.println(comboTypes.size());
+        roll(new int[]{1,1,1,1,1});
     }
 
     public int[] getDiceSet() {
-        return diceSet;
+        return this.diceSet;
     }
 
     public void setDiceSet(int[] diceSet) {
-        this.diceSet = diceSet;
-        calculateCombs();
+        try{
+            for (int d: diceSet) {
+                if(d < 1 || d > 6){
+                    throw new IllegalArgumentException();
+                }
+            }
+            if(diceSet.length != 5){
+                throw new IllegalArgumentException();
+            }
+            else{
+                this.diceSet = diceSet;
+                calculateCombs();
+            }
+        }
+        catch (IllegalArgumentException e) {
+
+        }
+        if(diceSet.length == 5){
+        }
     }
 
     public void roll(int[] reRoll) {
+        this.possibleScores = new Hashtable<>();
         int[] newRoll = new int[5];
         for (int i = 0; i < 5; i++) {
             if (reRoll[i] == 1) {
@@ -75,20 +101,11 @@ public class Dice {
     }
 
     public Integer selectScore(int i){ //return null if val does not exist. Else returns score.
-        Integer score = possibleScores.remove(i);
-        try {
-            if (score == null) {
-                throw new IndexOutOfBoundsException();
-            }
-        }
-        catch (IndexOutOfBoundsException e) {
-            System.out.println("please select valid combination input.");
-        }
-        return score;
+        return possibleScores.get(i);
     }
 
     public void calculateCombs(){
-        this.comboTypes = new Hashtable<>();
+        this.possibleScores = new Hashtable<>();
         for (int i = 0; i <= 12; i++) {
                 if (i <6){
                     howManyIs(i);

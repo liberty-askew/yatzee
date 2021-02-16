@@ -48,13 +48,6 @@ public class YahtzeeModelImplTests {
     }
   }
 
-  @Test
-  void rollDiceRange1_6() {
-    YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    for (int i : model.dice.getDiceSet()) {
-      assertTrue(i<7 && i>0);
-    }
-  }
 
   @Test
   void rollVoidDice(){
@@ -99,48 +92,7 @@ public class YahtzeeModelImplTests {
   }
 
 
-  @Test
-  void diceCombs1s() {
-    int[] dice = new int[]{1,1,1,1,1,1};
-    int[] score = new int[]{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-    Dice comb = new Dice();
-    comb.setDiceSet(new int[]{1,1,1,1,1,1});
-    assertEquals(comb.selectScore(0),6);
-    assertEquals(comb.selectScore(1),0);
-    assertEquals(comb.selectScore(2),0);
-    assertEquals(comb.selectScore(3),0);
-    assertEquals(comb.selectScore(4),0);
-    assertEquals(comb.selectScore(5),0);
-    assertEquals(comb.selectScore(6),6);
-    assertEquals(comb.selectScore(7),6);
-    assertEquals(comb.selectScore(8),6);
-    assertEquals(comb.selectScore(9),0);
-    assertEquals(comb.selectScore(10),0);
-    assertEquals(comb.selectScore(11),0);
-    assertEquals(comb.selectScore(12),6);
-  }
 
-  @Test
-  void diceCombsRun() {
-    int[] dice = new int[]{1, 2, 3, 4, 5};
-    int[] score = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-    Dice comb = new Dice();
-    comb.setDiceSet(dice);
-    assertEquals(comb.selectScore(10), 30);
-    assertEquals(comb.selectScore(11), 40);
-    assertEquals(comb.selectScore(12), 15);
-  }
-
-  @Test
-  void diceCombsFullHouse() {
-    int[] dice = new int[]{2,2,2,4,4};
-    int[] score = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-    Dice comb = new Dice();
-    comb.setDiceSet(dice);
-    assertEquals(comb.selectScore(1), 6);
-    assertEquals(comb.selectScore(9), 25);
-    assertEquals(comb.selectScore(3), 8);
-  }
 
   @Test
   void predeterminedGame(){ //TODO: add intermediate tests.
