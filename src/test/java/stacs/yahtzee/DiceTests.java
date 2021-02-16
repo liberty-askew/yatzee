@@ -3,10 +3,10 @@ package stacs.yahtzee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Hashtable;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DiceTests {
 
@@ -47,6 +47,20 @@ public class DiceTests {
         testDice.setDiceSet(new int[]{1,2,3,4,5});
         assertArrayEquals(testDice.getDiceSet(),new int[]{1,2,3,4,5});
         assertEquals(testDice.possibleScores[11],40);
+    }
+
+    @Test
+    void setInValidDice(){
+        int[] oldDice = testDice.getDiceSet();
+        testDice.setDiceSet(new int[]{1,2,3,4,5,6});
+        assertFalse(Arrays.equals(new int[]{1,2,3,4,5,6},testDice.getDiceSet()));
+        assertTrue(Arrays.equals(oldDice,testDice.getDiceSet()));
+        testDice.setDiceSet(new int[]{1});
+        assertFalse(Arrays.equals(new int[]{1},testDice.getDiceSet()));
+        assertTrue(Arrays.equals(oldDice,testDice.getDiceSet()));
+        testDice.setDiceSet(new int[]{1,6,8,-1,4});
+        assertFalse(Arrays.equals(new int[]{1,6,8,-1,4},testDice.getDiceSet()));
+        assertTrue(Arrays.equals(oldDice,testDice.getDiceSet()));
     }
 
     @Test
