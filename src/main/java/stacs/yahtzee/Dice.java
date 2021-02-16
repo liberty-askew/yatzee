@@ -6,7 +6,7 @@ import java.util.Hashtable;
 public class Dice {
 
     public int[] diceSet;
-    public Hashtable<Integer,Integer> possibleScores;
+    public int[] possibleScores;
     public Hashtable<Integer,String> comboTypes;
 
     /***
@@ -59,30 +59,28 @@ public class Dice {
         return this.diceSet;
     }
 
-    public void setDiceSet(int[] diceSet) {
+    public void setDiceSet(int[] newDiceSet) {
         try{
-            for (int d: diceSet) {
+            for (int d: newDiceSet) {
                 if(d < 1 || d > 6){
                     throw new IllegalArgumentException();
                 }
             }
-            if(diceSet.length != 5){
+            if(newDiceSet.length != 5){
                 throw new IllegalArgumentException();
             }
             else{
-                this.diceSet = diceSet;
+                this.diceSet = newDiceSet;
                 calculateCombs();
+                return;
             }
         }
         catch (IllegalArgumentException e) {
-
-        }
-        if(diceSet.length == 5){
+            System.out.println("Invalid Dice Input");
         }
     }
 
     public void roll(int[] reRoll) {
-        this.possibleScores = new Hashtable<>();
         int[] newRoll = new int[5];
         for (int i = 0; i < 5; i++) {
             if (reRoll[i] == 1) {
@@ -100,12 +98,16 @@ public class Dice {
         System.out.print("]");
     }
 
-    public Integer selectScore(int i){ //return null if val does not exist. Else returns score.
-        return possibleScores.get(i);
+    public int selectScore(int i){ //return null if val does not exist. Else returns score.
+        return possibleScores[i];
     }
 
     public void calculateCombs(){
-        this.possibleScores = new Hashtable<>();
+        System.out.println("START OF CALC COMBS");
+        for (int i: diceSet) {
+            System.out.print(i+" :");
+        }
+        possibleScores = new int[13];
         for (int i = 0; i <= 12; i++) {
                 if (i <6){
                     howManyIs(i);
@@ -125,7 +127,7 @@ public class Dice {
                     largeStraight();
                 }
                 if (i == 12){
-                    possibleScores.put(i , Arrays.stream(diceSet).sum());
+                    possibleScores[i] = Arrays.stream(diceSet).sum();
                     continue;
                 }
             }
@@ -138,72 +140,65 @@ public class Dice {
                 total += (i+1);
             }
         }
-        possibleScores.put(i , total);
+        this.possibleScores[i] = total;
     }
 
     private void iOfAKind(int i){
         for (int j = 0; j < 6; j++) {
-            if(possibleScores.get(j)!=null) {
-                if (possibleScores.get(j)>= (i - 3) * (j+1)) {
-                    possibleScores.put(i, Arrays.stream(diceSet).sum());
-                    return;
-                }
+            if (possibleScores[j]>= (i - 3) * (j+1)) {
+                possibleScores[i] = Arrays.stream(diceSet).sum();
+                return;
             }
         }
-        possibleScores.put(i, 0);
+        possibleScores[i] = 0;
         return;
     }
 
     private void fullHouse(){
-        if(possibleScores.get(6)!= null) {
             if (!compare(6, 0)) {
                 for (int j = 0; j < 6; j++) {
-                    if (possibleScores.get(j) != null) {
-                        if (possibleScores.get(j) == 2 * j) {
-                            possibleScores.put(9, 25);
+                        if (possibleScores[j] == 2 * j) {
+                            possibleScores[9] = 25;
                             return;
                         }
-                    }
+
                 }
             }
-        }
-        possibleScores.put(9, 0);
+        possibleScores[9]  = 0;
         return;
     }
 
     private void smallStraight(){
         inner: for (int j = 0; j < 3; j++) { //TODO: test
             for (int k = 0; k < 3; k++) {
-                if(possibleScores.get(j+k)!= null) {
                     if (!compare(j+k,j+k+1)) {
                         break inner;
                     }
-                }
+
             }
-            possibleScores.put(10,30);
+            possibleScores[10] = 30;
             return;
         }
-        possibleScores.put(10,0);
+        possibleScores[10] =0;
         return;
     }
 
     private void largeStraight() {
-        if(possibleScores.get(10)!= null) {
-            if (possibleScores.get(10).equals(30)) {
+            if (possibleScores[10]==30) {
                 if (compare(0,1) && compare(4,5) ||
                         (compare(1,2) && compare(5,6))) {
-                    possibleScores.put(11, 40);
+                    possibleScores[11] = 40;
                     return;
                 }
             }
-        }
-        possibleScores.put(11, 0);
+
+        possibleScores[11] = 0;
         return;
     }
 
 
     private boolean compare(int possScoreLookup , int comparable){
-        Integer returnedScore = possibleScores.get(possScoreLookup);
+        Integer returnedScore = possibleScores[possScoreLookup];
         if(returnedScore == null){
             return false;
         }

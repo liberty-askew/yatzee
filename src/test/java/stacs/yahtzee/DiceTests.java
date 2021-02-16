@@ -26,8 +26,8 @@ public class DiceTests {
     @Test
     public void testDiceSetUp() {
         assertEquals(testDice.diceSet.length,5);
-        assertTrue(testDice.possibleScores instanceof Hashtable);
-        assertEquals(testDice.possibleScores.size(),13);
+        assertTrue(testDice.possibleScores instanceof int[]);
+        assertEquals(testDice.possibleScores.length,13);
         assertTrue(testDice.comboTypes instanceof Hashtable);
         assertEquals(testDice.comboTypes.size(),13);
 
@@ -46,7 +46,7 @@ public class DiceTests {
     void setValidDice(){
         testDice.setDiceSet(new int[]{1,2,3,4,5});
         assertArrayEquals(testDice.getDiceSet(),new int[]{1,2,3,4,5});
-        assertEquals(testDice.possibleScores.get(11),40);
+        assertEquals(testDice.possibleScores[11],40);
     }
 
     @Test
@@ -78,21 +78,25 @@ public class DiceTests {
 
     @Test
     void diceCombs1s() {
-        Dice comb = new Dice();
-        comb.setDiceSet(new int[]{1,1,1,1,1,1});
-        assertEquals(comb.selectScore(0),6);
-        assertEquals(comb.selectScore(1),0);
-        assertEquals(comb.selectScore(2),0);
-        assertEquals(comb.selectScore(3),0);
-        assertEquals(comb.selectScore(4),0);
-        assertEquals(comb.selectScore(5),0);
-        assertEquals(comb.selectScore(6),6);
-        assertEquals(comb.selectScore(7),6);
-        assertEquals(comb.selectScore(8),6);
-        assertEquals(comb.selectScore(9),0);
-        assertEquals(comb.selectScore(10),0);
-        assertEquals(comb.selectScore(11),0);
-        assertEquals(comb.selectScore(12),6);
+        System.out.println("START OF TEST");
+        testDice.setDiceSet(new int[]{1,1,1,1,1});
+        int[] newset = testDice.getDiceSet();
+        for (int i: newset) {
+            System.out.println(i);
+        }
+        assertEquals(testDice.selectScore(0),5);
+        assertEquals(testDice.selectScore(1),0);
+        assertEquals(testDice.selectScore(2),0);
+        assertEquals(testDice.selectScore(3),0);
+        assertEquals(testDice.selectScore(4),0);
+        assertEquals(testDice.selectScore(5),0);
+        assertEquals(testDice.selectScore(6),5);
+        assertEquals(testDice.selectScore(7),5);
+        assertEquals(testDice.selectScore(8),5);
+        assertEquals(testDice.selectScore(9),0);
+        assertEquals(testDice.selectScore(10),0);
+        assertEquals(testDice.selectScore(11),0);
+        assertEquals(testDice.selectScore(12),5);
     }
 
     @Test

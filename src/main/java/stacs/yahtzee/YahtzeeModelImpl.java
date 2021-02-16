@@ -99,8 +99,8 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     @Override
     public void printCombinations(){
         for (int i = 0; i <= 12 ; i++) {
-            if(dice.possibleScores.get(i) != null && scores.getPlayerScore(playerTurn)[i] == -1){
-                System.out.println(i+". "+dice.comboTypes.get(i)+dice.possibleScores.get(i));
+            if(scores.getPlayerScore(playerTurn)[i] == -1){
+                System.out.println(i+". "+dice.comboTypes.get(i)+dice.possibleScores[i]);
             }
         }
     }
