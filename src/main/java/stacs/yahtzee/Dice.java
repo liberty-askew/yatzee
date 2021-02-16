@@ -192,7 +192,7 @@ public class Dice {
         for (int j = 0; j < 3; j++) {
             boolean valid = true;
             for (int k = 0; k < 3; k++) {
-                if (possibleScores[j+k] != j+k+1) {
+                if (possibleScores[j+k] < j+k+1) {
                     valid = false;
                 }
             }
