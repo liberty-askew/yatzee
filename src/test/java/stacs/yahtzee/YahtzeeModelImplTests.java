@@ -17,7 +17,7 @@ public class YahtzeeModelImplTests {
     for (int i: model.dice.getDiceSet()) {
       assertNotEquals(0,i);
     }
-    int[][] card = model.scoreboard.getScorecard();
+    int[][] card = model.scoreboard.scoreCard;
     assertEquals(13, card.length);
     assertEquals(2, card[0].length);
     assertEquals(1,model.roundNo);

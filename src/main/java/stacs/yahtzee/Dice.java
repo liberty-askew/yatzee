@@ -11,7 +11,8 @@ public class Dice {
 
     /***
      * KEY
-     * Index of possibleScores - Combination Type e.g possibleScores[1] = score for 2s combination.
+     * Index of possibleScores - Combination Type
+     * e.g possibleScores[1] = score for 2s combination.
      * 0 - 1s
      * 1 - 2s
      * 2 - 3s
@@ -34,8 +35,9 @@ public class Dice {
     public Dice(){
 
         this.diceSet = new int[5];
+        roll(new int[]{1,1,1,1,1}); //rolls all 5 dice at start.
 
-        comboTypes = new Hashtable<>();  //used for storing and printing combination names.
+        comboTypes = new Hashtable<>();  //used for storing and printing combination category names.
         comboTypes.put(0,"Ones: ");
         comboTypes.put(1,"Twos: ");
         comboTypes.put(2,"Threes: ");
@@ -50,7 +52,6 @@ public class Dice {
         comboTypes.put(11,"Large straight: ");
         comboTypes.put(12,"Chance: ");
 
-        roll(new int[]{1,1,1,1,1}); //rolls all 5 dice at start.
     }
 
 
@@ -73,7 +74,6 @@ public class Dice {
             else{
                 this.diceSet = newDiceSet;
                 calculateCombs();
-                return;
             }
         }
         catch (IllegalArgumentException e) {
@@ -98,7 +98,8 @@ public class Dice {
             }
         }
         setDiceSet(newRoll);
-        System.out.print("Dice: [ "); //printout for user
+        System.out.println();
+        System.out.print("Dice: [ "); //Print out for user
         for (int d : diceSet) {
             System.out.print(d + " ");
         }
@@ -142,10 +143,10 @@ public class Dice {
                 }
                 if (i == 12){ //Chance
                     possibleScores[i] = Arrays.stream(diceSet).sum();
-                    continue;
                 }
             }
     }
+
 
     private void howManyIs(int i){
 
@@ -158,6 +159,7 @@ public class Dice {
         this.possibleScores[i] = total;
     }
 
+
     private void iOfAKind(int i){
 
         for (int j = 0; j < 6; j++) {
@@ -167,12 +169,12 @@ public class Dice {
             }
         }
         possibleScores[i] = 0;
-        return;
     }
+
 
     private void fullHouse(){
 
-        if (possibleScores[6] != 0) {
+        if (possibleScores[6] != 0) { //must have 3 of a kind.
             for (int j = 0; j < 6; j++) {
                     if (possibleScores[j] == 2 * j) {
                         possibleScores[9] = 25;
@@ -182,8 +184,8 @@ public class Dice {
             }
         }
         possibleScores[9]  = 0;
-        return;
     }
+
 
     private void smallStraight(){
 
@@ -200,12 +202,12 @@ public class Dice {
             }
         }
         possibleScores[10] =0;
-        return;
     }
+
 
     private void largeStraight() {
 
-        if (possibleScores[10]==30) {
+        if (possibleScores[10]==30) { //must be a small straight.
             if (possibleScores[0]==1 && possibleScores[4] ==5 ||
                     (possibleScores[1] ==2 && possibleScores[5] == 6)){
                 possibleScores[11] = 40;
@@ -213,7 +215,6 @@ public class Dice {
             }
         }
         possibleScores[11] = 0;
-        return;
     }
 }
 

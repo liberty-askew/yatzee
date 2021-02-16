@@ -22,7 +22,7 @@ public class ScoreboardTests {
 
     @Test
     public void testSetup(){
-        assertEquals(testScoreboard.np,3);
+        assertEquals(testScoreboard.noPlayers,3);
         assertNotNull(testScoreboard.scoreCard);
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 3; j++) {
@@ -34,7 +34,7 @@ public class ScoreboardTests {
     @Test
     public void alternatePlayerNo(){
         Scoreboard testNo = new Scoreboard(5);
-        assertEquals(testNo.np , 5);
+        assertEquals(testNo.noPlayers, 5);
         assertEquals(testNo.scoreCard[0].length,5);
     }
 
@@ -48,7 +48,7 @@ public class ScoreboardTests {
 
     @Test
     public void getInitScorecard(){
-        int[][] scoreCardTest = testScoreboard.getScorecard();
+        int[][] scoreCardTest = testScoreboard.scoreCard;
         assertEquals(scoreCardTest[0].length,3);
         assertEquals(scoreCardTest.length,13);
         for (int i = 0; i < 13; i++) {
@@ -61,7 +61,7 @@ public class ScoreboardTests {
     @Test
     public void updateScorecard(){
         testScoreboard.updateScorecard(30,11,1);
-        int[][] scoreCardTest = testScoreboard.getScorecard();
+        int[][] scoreCardTest = testScoreboard.scoreCard;
         assertEquals(30,scoreCardTest[11][0]);
         testScoreboard.updateScorecard(18,6,2);
         int[] playerScoreTest = testScoreboard.getPlayerScore(2);

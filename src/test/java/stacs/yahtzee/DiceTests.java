@@ -35,7 +35,6 @@ public class DiceTests {
 
     @Test
     public void getDice(){
-        System.out.println(testDice);
         int[] diceSet = testDice.getDiceSet();
         for (int d: diceSet) {
             assertTrue(d >0 && d<7);
@@ -97,9 +96,6 @@ public class DiceTests {
     void diceCombs1s() {
         testDice.setDiceSet(new int[]{1,1,1,1,1});
         int[] newset = testDice.getDiceSet();
-        for (int i: newset) {
-            System.out.println(i);
-        }
         assertEquals(5,testDice.selectScore(0));
         assertEquals(0,testDice.selectScore(1));
         assertEquals(0,testDice.selectScore(2));
