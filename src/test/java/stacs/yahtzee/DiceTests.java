@@ -58,8 +58,11 @@ public class DiceTests {
         testDice.setDiceSet(new int[]{1});
         assertFalse(Arrays.equals(new int[]{1},testDice.getDiceSet()));
         assertTrue(Arrays.equals(oldDice,testDice.getDiceSet()));
-        testDice.setDiceSet(new int[]{1,6,8,-1,4});
-        assertFalse(Arrays.equals(new int[]{1,6,8,-1,4},testDice.getDiceSet()));
+        testDice.setDiceSet(new int[]{1,6,8,2,4});
+        assertFalse(Arrays.equals(new int[]{1,6,8,2,4},testDice.getDiceSet()));
+        assertTrue(Arrays.equals(oldDice,testDice.getDiceSet()));
+        testDice.setDiceSet(new int[]{1,6,8,-2,4});
+        assertFalse(Arrays.equals(new int[]{1,6,8,-2,4},testDice.getDiceSet()));
         assertTrue(Arrays.equals(oldDice,testDice.getDiceSet()));
     }
 
@@ -92,7 +95,6 @@ public class DiceTests {
 
     @Test
     void diceCombs1s() {
-        System.out.println("START OF TEST");
         testDice.setDiceSet(new int[]{1,1,1,1,1});
         int[] newset = testDice.getDiceSet();
         for (int i: newset) {
@@ -114,13 +116,22 @@ public class DiceTests {
     }
 
     @Test
-    void diceCombsRun() {
+    void diceCombsRunLow() {
         int[] dice = new int[]{1, 2, 3, 4, 5};
         Dice comb = new Dice();
         comb.setDiceSet(dice);
         assertEquals(comb.selectScore(10), 30);
         assertEquals(comb.selectScore(11), 40);
         assertEquals(comb.selectScore(12), 15);
+    }
+
+    @Test
+    void diceCombsRunHigh() {
+        int[] dice = new int[]{2, 3, 4, 5, 6};
+        Dice comb = new Dice();
+        comb.setDiceSet(dice);
+        assertEquals(comb.selectScore(10), 30);
+        assertEquals(comb.selectScore(11), 40);
     }
 
     @Test

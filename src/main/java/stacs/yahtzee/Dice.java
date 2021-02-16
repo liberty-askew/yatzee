@@ -27,13 +27,6 @@ public class Dice {
      * 12 - Chance
      */
 
-    public static void main(String[] args) {
-        Dice testDice = new Dice();
-        int[] diceSet = testDice.getDiceSet();
-        for (int d: diceSet) {
-            System.out.println(d >0 && d<7);
-        }
-    }
 
     public Dice(){
         this.diceSet = new int[5];
@@ -169,15 +162,17 @@ public class Dice {
     }
 
     private void smallStraight(){
-        inner: for (int j = 0; j < 3; j++) { //TODO: test
+        for (int j = 0; j < 3; j++) { //TODO: test
+            boolean valid = true;
             for (int k = 0; k < 3; k++) {
-                    if (possibleScores[j+k] != j+k+1) {
-                        break inner;
-                    }
-
+                if (possibleScores[j+k] != j+k+1) {
+                    valid = false;
+                }
             }
-            possibleScores[10] = 30;
-            return;
+            if(valid) {
+                possibleScores[10] = 30;
+                return;
+            }
         }
         possibleScores[10] =0;
         return;
@@ -195,9 +190,7 @@ public class Dice {
         possibleScores[11] = 0;
         return;
     }
-
-
-    }
+}
 
 
 
