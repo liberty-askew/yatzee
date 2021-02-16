@@ -6,9 +6,8 @@ package stacs.yahtzee;
 public class YahtzeeModelImpl implements YahtzeeModel {
 
     public int noPlayers; //number of players
-    public int[] diceSet;
     public Scores scores;
-    public Combinations combs;
+    public Dice dice;
     public int rollNo;
     public int playerTurn;
     public int roundNo;
@@ -16,10 +15,6 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     public static void main(String[] args) {
         int[] dice = new int[]{1,1,1,1,1,1};
         int[] score = new int[]{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-        Combinations comb = new Combinations(dice,score);
-        for (int i = 0; i < 12; i++) {
-            System.out.println(comb.selectScore(i) + " " + i);
-        }
     }
 
 
@@ -29,7 +24,7 @@ public class YahtzeeModelImpl implements YahtzeeModel {
                 throw new Exception();
             }
             this.noPlayers = np;
-            this.diceSet = new int[]{0, 0, 0, 0, 0};
+            this.dice = new Dice();
             this.scores = new Scores(np);
             initRound();
         }
@@ -51,50 +46,43 @@ public class YahtzeeModelImpl implements YahtzeeModel {
         rollDice(new int[] {1,1,1,1,1});
     }
 
-    public int[] getDiceSet(){
-        return diceSet;
-    }
 
+    /**
     public void updateCombs(int[] diceSet){
-        this.combs = new Combinations(diceSet, scores.getPlayerScore(playerTurn));
+        this.combs = new Dice(diceSet, scores.getPlayerScore(playerTurn));
         return;
     }
+    */
 
     @Override
-    public void rollDice(int[] reRoll) {
+    public int[] rollDice(int[] reRoll) {
         this.rollNo += 1;
         try {
             if (rollNo > 3 || rollNo < 0) {
                 throw new IllegalArgumentException();
             }
-            for (int i = 0; i < 5; i++) {
-                if (reRoll[i] == 1) {
-                    this.diceSet[i] = (int) Math.ceil(Math.random() * 6);
-                }
+            else{
+                dice.roll(reRoll);
             }
-            System.out.print("Dice: [ ");
-            for (int d : diceSet) {
-                System.out.print(d + " ");
-            }
-            System.out.print("]");
+            return dice.getDiceSet();
+            /**
             if (rollNo == 3) {
                 updateCombs(diceSet);
                 printCombinations();
                 return;
             }
+             */
         }
         catch (Exception e){ //might not be needed?
             System.out.println("No more than 3 rolls of dice each go.");
         }
+        return null;
     }
 
     @Override
     public void choseComb(int cat) {
-        if(combs == null){
-            updateCombs(diceSet);
-        }
-        Integer result = this.combs.selectScore(cat);
-        if (result != null) {
+        Integer result = this.dice.selectScore(cat);
+        if (result != null && scores.getPlayerScore(playerTurn)[cat] == -1) {
             scores.updateScorecard(result, cat, playerTurn);
         }
         endTurn();
@@ -103,8 +91,8 @@ public class YahtzeeModelImpl implements YahtzeeModel {
     @Override
     public void printCombinations(){
         for (int i = 0; i <= 12 ; i++) {
-            if(combs.possibleScores.get(i) != null){
-                System.out.println(i+". "+combs.comboTypes.get(i)+combs.possibleScores.get(i));
+            if(dice.possibleScores.get(i) != null && scores.getPlayerScore(playerTurn)[i] == -1){
+                System.out.println(i+". "+dice.comboTypes.get(i)+dice.possibleScores.get(i));
             }
         }
     }

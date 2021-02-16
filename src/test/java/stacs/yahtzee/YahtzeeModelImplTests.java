@@ -16,7 +16,7 @@ public class YahtzeeModelImplTests {
   void testModelSetUp() {
     YahtzeeModelImpl model = new YahtzeeModelImpl(2);
     assertEquals(2,model.noPlayers);
-    for (int i: model.getDiceSet()) {
+    for (int i: model.dice.getDiceSet()) {
       assertNotEquals(0,i);
     }
     int[][] card = model.scores.getScorecard();
@@ -31,7 +31,7 @@ public class YahtzeeModelImplTests {
   void testVoidSetUp() {
     YahtzeeModelImpl model = new YahtzeeModelImpl(1);
     assertEquals(0,model.noPlayers);
-    assertNull(model.getDiceSet());
+    assertNull(model.dice);
     assertNull(model.scores);
     assertEquals(0,model.rollNo);
     assertEquals(0,model.playerTurn);
@@ -41,9 +41,8 @@ public class YahtzeeModelImplTests {
   @Test
   void rollSelectedDice(){
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    int[] oldDice = model.getDiceSet();
-    model.rollDice(new int[]{0, 1, 0, 1, 0});
-    int[] newDice = model.getDiceSet();
+    int[] oldDice = model.dice.getDiceSet();
+    int[] newDice = model.rollDice(new int[]{0, 1, 0, 1, 0});
     for (int i = 0; i < 3; i++) {
       assertEquals(oldDice[(i*2)],newDice[(i*2)]);
     }
@@ -52,7 +51,7 @@ public class YahtzeeModelImplTests {
   @Test
   void rollDiceRange1_6() {
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    for (int i : model.getDiceSet()) {
+    for (int i : model.dice.getDiceSet()) {
       assertTrue(i<7 && i>0);
     }
   }
@@ -62,15 +61,16 @@ public class YahtzeeModelImplTests {
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
     model.rollDice(new int[]{1, 1, 1, 1, 1, 1});
     model.rollDice(new int[]{1, 1, 1, 1, 1, 1});
-    int[] oldDice = model.getDiceSet();
+    int[] oldDice = model.dice.getDiceSet();
     model.rollDice(new int[]{1, 1, 1, 1, 1, 1});
-    assertEquals(oldDice , model.getDiceSet());
+    assertEquals(oldDice , model.dice.getDiceSet());
   }
 
   @Test
   void choseCat(){
     YahtzeeModelImpl model = new YahtzeeModelImpl(3);
-    model.updateCombs(new int[] {1,1,1,2,4});
+    model.dice.setDiceSet(new int[] {1,1,1,2,4});
+    model.dice.calculateCombs();
     model.choseComb(0);
     int[] result = model.scores.sumScores();
     assertEquals(3,result[0]);
@@ -103,7 +103,8 @@ public class YahtzeeModelImplTests {
   void diceCombs1s() {
     int[] dice = new int[]{1,1,1,1,1,1};
     int[] score = new int[]{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-    Combinations comb = new Combinations(dice,score);
+    Dice comb = new Dice();
+    comb.setDiceSet(new int[]{1,1,1,1,1,1});
     assertEquals(comb.selectScore(0),6);
     assertEquals(comb.selectScore(1),0);
     assertEquals(comb.selectScore(2),0);
@@ -123,7 +124,8 @@ public class YahtzeeModelImplTests {
   void diceCombsRun() {
     int[] dice = new int[]{1, 2, 3, 4, 5};
     int[] score = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-    Combinations comb = new Combinations(dice, score);
+    Dice comb = new Dice();
+    comb.setDiceSet(dice);
     assertEquals(comb.selectScore(10), 30);
     assertEquals(comb.selectScore(11), 40);
     assertEquals(comb.selectScore(12), 15);
@@ -133,7 +135,8 @@ public class YahtzeeModelImplTests {
   void diceCombsFullHouse() {
     int[] dice = new int[]{2,2,2,4,4};
     int[] score = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-    Combinations comb = new Combinations(dice, score);
+    Dice comb = new Dice();
+    comb.setDiceSet(dice);
     assertEquals(comb.selectScore(1), 6);
     assertEquals(comb.selectScore(9), 25);
     assertEquals(comb.selectScore(3), 8);
@@ -145,25 +148,25 @@ public class YahtzeeModelImplTests {
     int[][] presetDice = {{1,1,1,1,1},{2,2,2,2,2},{3,3,3,3,3},{4,4,4,4,4},{5,5,5,5,5},{6,6,6,6,6}};
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 2; j++) {
-        model.updateCombs(presetDice[i%6]);
+        model.dice.setDiceSet(presetDice[i%6]);
         model.choseComb(i);
       }
     }
-    model.updateCombs(presetDice[3]); //P1
+    model.dice.setDiceSet(presetDice[3]); //P1
     model.choseComb(9);
-    model.updateCombs(new int[]{5,5,6,6,6}); //P2
+    model.dice.setDiceSet(new int[]{5,5,6,6,6}); //P2
     model.choseComb(9);
-    model.updateCombs(presetDice[4]); //P1
+    model.dice.setDiceSet(presetDice[4]); //P1
     model.choseComb(10);
-    model.updateCombs(new int[]{1,2,3,4,5}); //P2
+    model.dice.setDiceSet(new int[]{1,2,3,4,5}); //P2
     model.choseComb(10);
-    model.updateCombs(presetDice[5]); //P1
+    model.dice.setDiceSet(presetDice[5]); //P1
     model.choseComb(11);
-    model.updateCombs(new int[]{1,2,3,4,5}); //P2
+    model.dice.setDiceSet(new int[]{1,2,3,4,5}); //P2
     model.choseComb(11);
-    model.updateCombs(presetDice[1]); //P1
+    model.dice.setDiceSet(presetDice[1]); //P1
     model.choseComb(12);
-    model.updateCombs(presetDice[1]); //P2
+    model.dice.setDiceSet(presetDice[1]); //P2
     model.choseComb(12);
     //model.printScores();
     assertTrue(model.scores.getWinner()[0]==2);

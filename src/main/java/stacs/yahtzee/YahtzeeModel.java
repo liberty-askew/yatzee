@@ -11,7 +11,7 @@ public interface YahtzeeModel {
    * @param reRoll - index of die to be re-rolled. Len=5, reRoll[i]={0,1}, when rollNo = 0 reRoll = [1,1,1,1,1]
 
    */
-  void rollDice(int[] reRoll);
+  int[] rollDice(int[] reRoll);
 
   /**
    * Can only be used at the end of each players turn and once per turn.

@@ -3,12 +3,11 @@ package stacs.yahtzee;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-public class Combinations {
+public class Dice {
 
-    final int[] DICE;
-    final int[] PLAYERSCORE;
+    public int[] diceSet;
     public Hashtable<Integer,Integer> possibleScores;
-    public Hashtable<Integer,String> comboTypes;
+    public Hashtable<Integer,String> comboTypes = new Hashtable<>();
 
     /***
      * KEY
@@ -29,13 +28,10 @@ public class Combinations {
      */
 
 
-    public Combinations(int[] dice  , int[] playerScore){
-        this.PLAYERSCORE = playerScore;
-        this.DICE = dice;
+    public Dice(){
+        this.diceSet = new int[5];
         this.possibleScores = new Hashtable<>();
-        this.comboTypes = new Hashtable<>();
-        calculateCombs();
-
+        roll(new int[]{1,1,1,1,1});
         comboTypes.put(0,"Ones: ");
         comboTypes.put(1,"Twos: ");
         comboTypes.put(2,"Threes: ");
@@ -49,6 +45,33 @@ public class Combinations {
         comboTypes.put(10,"Small straight: ");
         comboTypes.put(11,"Large straight: ");
         comboTypes.put(12,"Chance: ");
+    }
+
+    public int[] getDiceSet() {
+        return diceSet;
+    }
+
+    public void setDiceSet(int[] diceSet) {
+        this.diceSet = diceSet;
+        calculateCombs();
+    }
+
+    public void roll(int[] reRoll) {
+        int[] newRoll = new int[5];
+        for (int i = 0; i < 5; i++) {
+            if (reRoll[i] == 1) {
+                newRoll[i] = (int) Math.ceil(Math.random() * 6);
+            }
+            else{
+                newRoll[i] = diceSet[i];
+            }
+        }
+        setDiceSet(newRoll);
+        System.out.print("Dice: [ ");
+        for (int d : diceSet) {
+            System.out.print(d + " ");
+        }
+        System.out.print("]");
     }
 
     public Integer selectScore(int i){ //return null if val does not exist. Else returns score.
@@ -65,6 +88,7 @@ public class Combinations {
     }
 
     public void calculateCombs(){
+        this.comboTypes = new Hashtable<>();
         for (int i = 0; i <= 12; i++) {
                 if (i <6){
                     howManyIs(i);
@@ -84,20 +108,15 @@ public class Combinations {
                     largeStraight();
                 }
                 if (i == 12){
-                    possibleScores.put(i , Arrays.stream(DICE).sum());
+                    possibleScores.put(i , Arrays.stream(diceSet).sum());
                     continue;
                 }
             }
-        for (int i = 0; i <= 12; i++){
-            if( PLAYERSCORE[i] != -1){
-                possibleScores.remove(i);
-            }
-        }
     }
 
     private void howManyIs(int i){
         int total = 0;
-        for (int j: DICE) {
+        for (int j: diceSet) {
             if(j == (i+1)){
                 total += (i+1);
             }
@@ -109,7 +128,7 @@ public class Combinations {
         for (int j = 0; j < 6; j++) {
             if(possibleScores.get(j)!=null) {
                 if (possibleScores.get(j)>= (i - 3) * (j+1)) {
-                    possibleScores.put(i, Arrays.stream(DICE).sum());
+                    possibleScores.put(i, Arrays.stream(diceSet).sum());
                     return;
                 }
             }
@@ -164,7 +183,6 @@ public class Combinations {
         possibleScores.put(11, 0);
         return;
     }
-
 
 
     private boolean compare(int possScoreLookup , int comparable){
